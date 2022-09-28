@@ -60,13 +60,13 @@ alt="Deploy to Cloudflare Workers" src="https://deploy.workers.cloudflare.com/bu
 <img alt="Cloudflare Workers deployment screen" src="https://i.imgur.com/19LOr21.png">
 </p>
 
-1. Find your way to the "Settings" tab of the worker you've just deployed, at Workers › `github-webhook-filter-proxy`. Once there, go to the "Variables" section and add a new environment variable by clicking "Add variable".
+3. Find your way to the "Settings" tab of the worker you've just deployed, at Workers › `github-webhook-filter-proxy`. Once there, go to the "Variables" section and add a new environment variable by clicking "Add variable".
 
 <p align="center">
 <img alt="Worker variables screen" src="https://i.imgur.com/JMI5jXo.png">
 </p>
 
-3. As you may have guessed, the proxy is configured via environment variables. For now, we will set three environment variables:
+4. As you may have guessed, the proxy is configured via environment variables. For now, we will set three environment variables:
 
 - `SECRET_TOKEN`: a random, unique string that only GitHub and the proxy should know, used by the proxy to authenticate that events come from GitHub. Some ways of generating this token include running `echo "$(tr -dc _A-Z-a-z-0-9 < /dev/urandom | head -c32)"` on a Unix-like terminal, or using websites like [random.org](https://www.random.org/strings/?num=1&len=20&digits=on&upperalpha=on&loweralpha=on&unique=off&format=html&rnd=new). **Make sure to click the "Encrypt" button once you are done typing the token!**
 - `TARGET_URL`: the URL to which the proxy will relay events that it does not drop. This is the URL of your target service (or another proxy, if you are into that).
@@ -78,13 +78,13 @@ Before clicking "Save" to apply the changes, the edition form should look like t
 <img alt="Worker variables edition form preview" src="https://i.imgur.com/efGyZXO.png">
 </p>
 
-4. On GitHub, go to the corresponding webhooks settings page. Set the payload URL to the route of your worker, select `application/json` as "Content type", and type the same secret as in `SECRET_TOKEN`. If you are using the default `workers.dev` route, you can (and should) leave SSL verification enabled.
+5. On GitHub, go to the corresponding webhooks settings page. Set the payload URL to the route of your worker, select `application/json` as "Content type", and type the same secret as in `SECRET_TOKEN`. If you are using the default `workers.dev` route, you can (and should) leave SSL verification enabled.
 
 <p align="center">
 <img alt="GitHub webhook configuration screen" src="https://i.imgur.com/NjGrdNL.png">
 </p>
 
-5. **The proxy is ready to rock!** 🎉 If you want to know what is going on, check out the "Recent deliveries" on GitHub and the worker logs on Cloudflare. The next section of this document describes the environment variables you can use to configure how it filters events.
+6. **The proxy is ready to rock!** 🎉 If you want to know what is going on, check out the "Recent deliveries" on GitHub and the worker logs on Cloudflare. The next section of this document describes the environment variables you can use to configure how it filters events.
 
 # ⚙️ Configuration
 
