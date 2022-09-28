@@ -1,0 +1,4 @@
+name = "github-webhook-filter-proxy"
+main = "src/index.ts"
+compatibility_date = "2022-09-28"
+minify = true

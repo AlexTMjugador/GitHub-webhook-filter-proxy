@@ -1,0 +1,23 @@
+name: CI
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    name: Continuous integration
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 📥 Checkout source
+        uses: actions/checkout@v3
+
+      - name: 📥 Install dependencies
+        run: npm ci
+
+      - name: "🔍 Static analysis: run ESLint"
+        run: npm run lint
+
+      - name: "🔍 Static analysis: run Prettier"
+        run: npm run format
