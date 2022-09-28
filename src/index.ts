@@ -85,7 +85,7 @@ export default {
         requestBody
       );
 
-      if (isWebhookSignatureValid) {
+      if (!isWebhookSignatureValid) {
         return new Response("Missing or invalid GitHub webhook signature", {
           status: ResponseCode.FORBIDDEN,
         });
