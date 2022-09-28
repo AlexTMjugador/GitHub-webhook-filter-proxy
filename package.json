@@ -1,6 +1,6 @@
 {
   "name": "github-webhook-filter-proxy",
-  "description": "A serverless, easy-to-setup GitHub webhook filtering proxy that relays or drops events when they match configurable regular expressions.",
+  "description": "A serverless, easy-to-setup GitHub webhook filtering proxy that relays or drops events when they match configurable regular expressions, powered by Cloudflare Workers.",
   "author": "Alejandro González <AlexTMjugador@users.noreply.github.com>",
   "version": "0.0.1",
   "homepage": "https://github.com/AlexTMjugador/GitHub-webhook-filter-proxy",
