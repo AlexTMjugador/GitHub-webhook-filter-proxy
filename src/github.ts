@@ -66,8 +66,8 @@ export type GitHubEventName = typeof GITHUB_EVENT_NAMES[number];
 // by GitHub, using some shared `secret_token`. If this verification
 // passes, the request is authenticated as coming from a GitHub server.
 export async function verifyGitHubWebhookSignature(
-  secret_token: string,
-  request_headers: Headers,
+  secretToken: string,
+  requestHeaders: Headers,
   payload: string
 ) {
   // The Cloudflare Workers TextEncoder always uses UTF-8
@@ -77,7 +77,7 @@ export async function verifyGitHubWebhookSignature(
     "HMAC",
     await crypto.subtle.importKey(
       "raw",
-      textEncoder.encode(secret_token),
+      textEncoder.encode(secretToken),
       {
         name: "HMAC",
         hash: "SHA-256",
@@ -87,7 +87,7 @@ export async function verifyGitHubWebhookSignature(
     ),
     textEncoder.encode(
       // GitHub prefixes the hex digest of the signature with sha256=. Remove that
-      request_headers.get("X-Hub-Signature-256")?.replace(/^sha256=/, "")
+      requestHeaders.get("X-Hub-Signature-256")?.replace(/^sha256=/, "")
     ),
     textEncoder.encode(payload)
   );
@@ -95,15 +95,15 @@ export async function verifyGitHubWebhookSignature(
 
 // Returns the GitHub webhook event name specified in the request headers as-is,
 // if any.
-export function getRawGitHubEventName(request_headers: Headers) {
-  return request_headers.get("X-GitHub-Event");
+export function getRawGitHubEventName(requestHeaders: Headers) {
+  return requestHeaders.get("X-GitHub-Event");
 }
 
 // Returns the GitHub webhook event name in a strongly-typed form. `undefined`
 // will be returned if there is no event name in the request headers, or if it
 // did not match any recognized event.
-export function getGitHubEventName(request_headers: Headers) {
-  const eventName = getRawGitHubEventName(request_headers)?.toUpperCase();
+export function getGitHubEventName(requestHeaders: Headers) {
+  const eventName = getRawGitHubEventName(requestHeaders)?.toUpperCase();
 
   return GITHUB_EVENT_NAMES.find(
     (validEventName) => validEventName === eventName

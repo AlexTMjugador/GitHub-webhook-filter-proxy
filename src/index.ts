@@ -37,13 +37,9 @@ type Settings = {
 };
 
 export default {
-  async fetch(
-    request: Request,
-    env: Settings,
-    _ctx: ExecutionContext
-  ): Promise<Response> {
+  async fetch(request: Request, env: Settings): Promise<Response> {
     // First, do some quick sanity checks for the request
-    if (request.method != "POST") {
+    if (request.method !== "POST") {
       return new Response("Unexpected HTTP method", {
         status: ResponseCode.BAD_REQUEST,
         headers: { Allow: "POST" },
@@ -118,10 +114,9 @@ export default {
     // Check whether the event body matches some configured regex
     let eventBodyMatches;
     let eventMatches;
-    if (`${eventName}_EVENT_MATCH_REGEX` in env) {
-      eventBodyMatches = normalizedWebhookEventBody.match(
-        env[`${eventName}_EVENT_MATCH_REGEX`]!
-      );
+    const matchRegex = env[`${eventName}_EVENT_MATCH_REGEX`];
+    if (matchRegex !== undefined) {
+      eventBodyMatches = normalizedWebhookEventBody.match(matchRegex);
       eventMatches = true;
     } else {
       eventBodyMatches = false;
@@ -163,7 +158,7 @@ export default {
       );
     }
 
-    if (eventAction == "relay") {
+    if (eventAction === "relay") {
       // Relay the request we've received as-is, barring some additional headers added by Cloudflare
       try {
         return await fetch(
