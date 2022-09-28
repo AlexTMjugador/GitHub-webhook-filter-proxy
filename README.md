@@ -24,13 +24,13 @@ alt="CI workflow status" src="https://github.com/AlexTMjugador/GitHub-webhook-fi
 
 # 💡 Background
 
-GitHub supports sending HTTP POST requests to an arbitrary server in response to events on the platform, known as [_webhooks_](https://docs.github.com/en/developers/webhooks-and-events/webhooks/about-webhooks), to notify external services about them. They are particularly useful for integrating external services with GitHub.
+GitHub supports sending HTTP POST requests to an arbitrary server in response to events on the platform, known as [_webhooks_](https://docs.github.com/en/developers/webhooks-and-events/webhooks/about-webhooks), to notify external services about them. They are particularly useful for integrating with GitHub.
 
 However, while GitHub lets users select what types of events trigger a webhook, it does not offer any functionality for filtering events by more fine-grained conditions. For example, when a webhook is triggered by a `push` event, it is triggered for a `push` in any branch, even if the service is only interested in a single branch.
 
 This behavior can be undesirable: it wastes traffic for would-be-ignored events, and several external services, which in some cases are not controlled by the end user, may not offer any filtering features, triggering superfluous actions.
 
-This project offers an easy-to-setup, configurable proxy that anyone can use to drop events before they are delivered to the actual external service, as if they never were triggered. GitHub can be configured to deliver events to this proxy, which then decides to relay the event to the external service or drop it, based on whether the event JSON body matches a regular expression.
+This project offers an easy-to-setup, flexible proxy that anyone can use to drop events before they are delivered to the actual external service, as if they never were triggered. GitHub can be configured to deliver events to this proxy, which then decides to relay the event to the external service or drop it, based on whether the event JSON body matches a regular expression.
 
 ## Use cases
 
@@ -104,7 +104,7 @@ The proxy expects and validates these signatures, so both GitHub and the proxy m
 
 **Accepted values**: any HTTP(S) URL
 
-The URL to which the proxy will relay events that it does not drop. This is the URL the service that is being proxied.
+The URL to which the proxy will relay events that it does not drop. This is the URL of the service that is being proxied.
 
 ## `UNMATCHED_EVENT_ACTION`
 
@@ -124,7 +124,7 @@ The action to perform when a regular expression match is not defined for an even
 
 **Default value**: not defined
 
-The regular expression to match against the JSON event payload for `<EVENT NAME>` events, where `<EVENT NAME>` is the name of an event [listed in the GitHub documentation](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads), converted to uppercase.
+The regular expression to match against the JSON event payload for `<EVENT NAME>` events, where `<EVENT NAME>` is the name of a webhook event [listed in the GitHub documentation](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads), converted to uppercase.
 
 To increase robustness, the payload is minified before matching as if by the [`JSON.stringify`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify) function.
 
