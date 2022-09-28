@@ -1,3 +1,5 @@
+import hexToArrayBuffer from "hex-to-array-buffer";
+
 // A list of GitHub webhook event names.
 //
 // Extracted from <https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads>
@@ -85,9 +87,10 @@ export async function verifyGitHubWebhookSignature(
       false,
       ["verify"]
     ),
-    textEncoder.encode(
-      // GitHub prefixes the hex digest of the signature with sha256=. Remove that
-      requestHeaders.get("X-Hub-Signature-256")?.replace(/^sha256=/, "")
+    // GitHub prefixes the hexadecimal representation of the signature with "sha256=".
+    // Remove that and convert the hexadecimal string back to the raw bytes that this function expects
+    hexToArrayBuffer(
+      requestHeaders.get("X-Hub-Signature-256")?.replace(/^sha256=/, "") ?? ""
     ),
     textEncoder.encode(payload)
   );
