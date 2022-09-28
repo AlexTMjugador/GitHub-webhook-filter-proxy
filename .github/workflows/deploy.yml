@@ -11,7 +11,7 @@ on:
 
 jobs:
   deploy:
-    name: Deploy to Cloudflare Workers
+    name: Deploy
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
