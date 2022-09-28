@@ -2,3 +2,23 @@ name = "github-webhook-filter-proxy"
 main = "src/index.ts"
 compatibility_date = "2022-09-28"
 minify = true
+
+# Stop Wrangler from deleting vars that are not present in this file.
+# By default Wrangler will remove all vars and replace them with those found in the wrangler.toml configuration.
+# This is meant to support the use case of modifying variables after deployment via the web dashboard. If you
+# don't want that (read below), you should comment this out.
+keep_vars = true
+
+# Uncomment the following lines, starting at "[vars]", and comment the "keep_vars = true" line above to use
+# this file as the source of truth for worker configuration. This is the approach recommended by CloudFlare.
+#
+# The worker reads the SECRET_TOKEN secret, which should be created on the web dashboard, or via the following
+# Wrangler CLI command:
+#
+# $ printf 'YOUR_TOKEN' | wrangler secret put SECRET_TOKEN
+#
+#[vars]
+#TARGET_URL = "https://example.com"
+#PUSH_EVENT_MATCH_REGEX = "..."
+#PUSH_EVENT_MATCH_ACTION = "drop"
+#UNMATCHED_EVENT_ACTION = "relay"
