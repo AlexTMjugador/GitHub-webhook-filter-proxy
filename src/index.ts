@@ -141,7 +141,7 @@ export default {
         // a match, defaulting to "relay"
 
         const matchAction = env[`${eventName}_EVENT_MATCH_ACTION`];
-        eventAction = matchAction === "drop" ? "relay" : "drop";
+        eventAction = matchAction === "relay" ? "drop" : "relay";
 
         console.debug(
           `Event ${eventName} did not match the configured regex. Filtering action: ${eventAction}`
