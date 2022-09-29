@@ -168,7 +168,7 @@ Contributions include, but are not limited to:
 
 Code contributions must pass CI checks and be deemed of enough quality by a repository maintainer to be merged.
 
-The proxy source artifacts are structured as a standard `npm` project, coded in TypeScript. The [Wrangler](https://developers.cloudflare.com/workers/wrangler/get-started/) CLI tool is used for development and deployment. After the first `npm install`, the `npm run start` will launch the worker in a local server for development. Before committing any change, you should run ESlint and Prettier with `npm run lint` and `npm run format`, respectively.
+The proxy source artifacts are structured as a standard `npm` project, coded in TypeScript. The [Wrangler](https://developers.cloudflare.com/workers/wrangler/get-started/) CLI tool is used for development and deployment. After the first `npm install`, `npm run start` will launch the worker in a local server for development. Before committing any change, you should run ESlint and Prettier with `npm run lint` and `npm run format`, respectively.
 
 # 🤝 Contact
 
