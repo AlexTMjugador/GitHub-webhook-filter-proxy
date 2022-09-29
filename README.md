@@ -18,6 +18,7 @@ alt="CI workflow status" src="https://github.com/AlexTMjugador/GitHub-webhook-fi
 	- [`<EVENT NAME>_EVENT_MATCH_REGEX`](#event-name_event_match_regex)
 	- [`<EVENT NAME>_EVENT_MATCH_ACTION`](#event-name_event_match_action)
 	- [Configuration via files](#configuration-via-files)
+	- [Examples](#examples)
 - [❤️ Contributing](#️-contributing)
 - [🤝 Contact](#-contact)
 - [🧑‍🤝‍🧑 Contributors](#-contributors)
@@ -145,6 +146,14 @@ The action to take when the regular expression defined by [`<EVENT NAME>_EVENT_M
 The quickstart guide sets worker environment variables using the Cloudflare web dashboard. Nevertheless, it is also possible to configure them in the `wrangler.toml` file, which is the approach recommended by Cloudflare.
 
 The Cloudflare documentation explains [how to set environment variables this way](https://developers.cloudflare.com/workers/platform/environment-variables/#environment-variables-via-wrangler), and describes [the `wrangler.toml` file format](https://developers.cloudflare.com/workers/wrangler/configuration). The [`wrangler.toml` file at this repository](https://github.com/AlexTMjugador/GitHub-webhook-filter-proxy/blob/master/wrangler.toml) contains comments that illustrate how it would be done.
+
+## Examples
+
+The next example variables configure the proxy to relay everything except push events made by bots or on branches managed by [Renovate](https://github.com/renovatebot/renovate).
+
+- `PUSH_EVENT_MATCH_REGEX`: `(?:"ref":"refs\/heads\/renovate\/[^"]+")|(?:"login":"github-actions\[bot\]")`
+- `PUSH_EVENT_MATCH_ACTION` (optional): `drop`
+- `UNMATCHED_EVENT_ACTION`: `relay`
 
 # ❤️ Contributing
 
