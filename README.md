@@ -1,24 +1,25 @@
 <div align="center">
 <h1>GitHub webhook filter proxy</h1>
 
-<i>A serverless, easy-to-setup GitHub webhook filtering proxy that relays or drops events when they match configurable regular expressions, powered by Cloudflare Workers.</i>
+<i>A serverless, easy-to-setup GitHub webhook filtering proxy that relays or drops events when they match configurable JSONPath expressions, powered by Cloudflare Workers.</i>
 
 <a href="https://github.com/AlexTMjugador/GitHub-webhook-filter-proxy/actions?query=workflow%3ACI"><img
 alt="CI workflow status" src="https://github.com/AlexTMjugador/GitHub-webhook-filter-proxy/actions/workflows/ci.yml/badge.svg"></a>
 <a href="https://github.com/AlexTMjugador/GitHub-webhook-filter-proxy/actions?query=workflow%3A%22Deploy+to+Cloudflare+Workers%22"><img alt="Deploy workflow status" src="https://github.com/AlexTMjugador/GitHub-webhook-filter-proxy/actions/workflows/deploy.yml/badge.svg"></a>
+
 </div>
 
 - [💡 Background](#-background)
-	- [Use cases](#use-cases)
+  - [Use cases](#use-cases)
 - [✨ Quickstart](#-quickstart)
 - [⚙️ Configuration](#️-configuration)
-	- [`SECRET_TOKEN`](#secret_token)
-	- [`TARGET_URL`](#target_url)
-	- [`UNMATCHED_EVENT_ACTION`](#unmatched_event_action)
-	- [`<EVENT NAME>_EVENT_MATCH_REGEX`](#event-name_event_match_regex)
-	- [`<EVENT NAME>_EVENT_MATCH_ACTION`](#event-name_event_match_action)
-	- [Configuration via files](#configuration-via-files)
-	- [Examples](#examples)
+  - [`SECRET_TOKEN`](#secret_token)
+  - [`TARGET_URL`](#target_url)
+  - [`UNMATCHED_EVENT_ACTION`](#unmatched_event_action)
+  - [`<EVENT NAME>_EVENT_MATCH_JSONPATH`](#event-name_event_match_jsonpath)
+  - [`<EVENT NAME>_EVENT_MATCH_ACTION`](#event-name_event_match_action)
+  - [Configuration via files](#configuration-via-files)
+  - [Examples](#examples)
 - [❤️ Contributing](#️-contributing)
 - [🤝 Contact](#-contact)
 - [🧑‍🤝‍🧑 Contributors](#-contributors)
@@ -31,7 +32,7 @@ However, while GitHub lets users select what types of events trigger a webhook, 
 
 This behavior can be undesirable: it wastes traffic for would-be-ignored events, and several external services, which in some cases are not controlled by the end user, may not offer any filtering features, triggering superfluous actions.
 
-This project offers an easy-to-setup, flexible proxy that anyone can use to drop events before they are delivered to the actual external service, as if they never were triggered. GitHub can be configured to deliver events to this proxy, which then decides to relay the event to the external service or drop it, based on whether the event JSON body matches a regular expression.
+This project offers an easy-to-setup, flexible proxy that anyone can use to drop events before they are delivered to the actual external service, as if they never were triggered. GitHub can be configured to deliver events to this proxy, which then decides to relay the event to the external service or drop it, based on whether the event JSON body matches a JSONPath expression.
 
 ## Use cases
 
@@ -71,7 +72,7 @@ alt="Deploy to Cloudflare Workers" src="https://deploy.workers.cloudflare.com/bu
 
 - `SECRET_TOKEN`: a random, unique string that only GitHub and the proxy should know, used by the proxy to authenticate that events come from GitHub. Some ways of generating this token include running `echo "$(tr -dc _A-Z-a-z-0-9 < /dev/urandom | head -c32)"` on a Unix-like terminal, or using websites like [random.org](https://www.random.org/strings/?num=1&len=20&digits=on&upperalpha=on&loweralpha=on&unique=off&format=html&rnd=new). **Make sure to click the "Encrypt" button once you are done typing the token!**
 - `TARGET_URL`: the URL to which the proxy will relay events that it does not drop. This is the URL of your target service (or another proxy, if you are into that).
-- `UNMATCHED_EVENT_ACTION`: the action to perform when a regular expression match is not configured for an input event. The default is `drop`, so set it to `relay` to make the proxy send all the events it receives to the target URL.
+- `UNMATCHED_EVENT_ACTION`: the action to perform when a JSONPath expression match is not configured for an input event. The default is `drop`, so set it to `relay` to make the proxy send all the events it receives to the target URL.
 
 Before clicking "Save" to apply the changes, the edition form should look like this:
 
@@ -115,21 +116,21 @@ The URL to which the proxy will relay events that it does not drop. This is the 
 
 **Default value**: `drop`
 
-The action to perform when a regular expression match is not defined for an event. `drop` discards the event, while `relay` forwards the request to the target URL.
+The action to perform when a JSONPath expression match is not defined for an event. `drop` discards the event, while `relay` forwards the request to the target URL.
 
-## `<EVENT NAME>_EVENT_MATCH_REGEX`
+## `<EVENT NAME>_EVENT_MATCH_JSONPATH`
 
 **Required**: no
 
-**Accepted values**: a [JavaScript regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions), as a string
+**Accepted values**: a [JSONPath expression](https://goessner.net/articles/JsonPath/), as a string
 
 **Default value**: not defined
 
-The regular expression to match against the JSON event payload for `<EVENT NAME>` events, where `<EVENT NAME>` is the name of a webhook event [listed in the GitHub documentation](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads), converted to uppercase.
+The JSONPath expression to match against the JSON event payload for `<EVENT NAME>` events, where `<EVENT NAME>` is the name of a webhook event [listed in the GitHub documentation](https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads), converted to uppercase.
 
-To increase robustness, the payload is minified before matching as if by the [`JSON.stringify`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify) function.
+For matching, the event JSON object is put into a single-element array, and then the specified JSONPath expression is evaluated by the [`jsonpath` npm package](https://www.npmjs.com/package/jsonpath/v/1.1.1). This wrapping allows filtering JSONPath subscript operator expressions on the event object keys.
 
-If a match occurs, the proxy will either relay or drop the event as defined by [`<EVENT NAME>_EVENT_MATCH_ACTION`](#event-name_event_match_action). If the payload does not match the regular expression, the proxy will take the opposite action to the one it would take if it matched (dropping instead of relaying, and vice versa).
+If a match occurs, the proxy will either relay or drop the event as defined by [`<EVENT NAME>_EVENT_MATCH_ACTION`](#event-name_event_match_action). If the payload does not match the JSONPath expression, the proxy will take the opposite action to the one it would take if it matched (dropping instead of relaying, and vice versa).
 
 ## `<EVENT NAME>_EVENT_MATCH_ACTION`
 
@@ -139,7 +140,7 @@ If a match occurs, the proxy will either relay or drop the event as defined by [
 
 **Default value**: `drop`
 
-The action to take when the regular expression defined by [`<EVENT NAME>_EVENT_MATCH_REGEX`](#event-name_event_match_regex) matches the JSON event payload.
+The action to take when the JSONPath expression defined by [`<EVENT NAME>_EVENT_MATCH_JSONPATH`](#event-name_event_match_jsonpath) matches the JSON event payload.
 
 ## Configuration via files
 
@@ -151,7 +152,7 @@ The Cloudflare documentation explains [how to set environment variables this way
 
 The next example variables configure the proxy to relay everything except push events made by bots or on branches managed by [Renovate](https://github.com/renovatebot/renovate).
 
-- `PUSH_EVENT_MATCH_REGEX`: `(?:"ref":"refs\/heads\/renovate\/[^"]+")|(?:"login":"github-actions\[bot\]")`
+- `PUSH_EVENT_MATCH_JSONPATH`: `$[?(@.ref.startsWith('refs/heads/renovate/') || @.sender.login == 'github-actions[bot]')]`
 - `PUSH_EVENT_MATCH_ACTION` (optional): `drop`
 - `UNMATCHED_EVENT_ACTION`: `relay`
 

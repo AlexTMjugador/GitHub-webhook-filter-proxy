@@ -1,6 +1,6 @@
 {
   "name": "github-webhook-filter-proxy",
-  "description": "A serverless, easy-to-setup GitHub webhook filtering proxy that relays or drops events when they match configurable regular expressions, powered by Cloudflare Workers.",
+  "description": "A serverless, easy-to-setup GitHub webhook filtering proxy that relays or drops events when they match configurable JSONPath expressions, powered by Cloudflare Workers.",
   "author": "Alejandro González <AlexTMjugador@users.noreply.github.com>",
   "version": "0.0.1",
   "homepage": "https://github.com/AlexTMjugador/GitHub-webhook-filter-proxy",
@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "3.16.0",
+    "@types/jsonpath": "^0.2.0",
     "@typescript-eslint/eslint-plugin": "5.38.1",
     "@typescript-eslint/parser": "5.38.1",
     "eslint": "8.24.0",
@@ -26,6 +27,7 @@
     "wrangler": "2.1.9"
   },
   "dependencies": {
-    "hex-to-array-buffer": "2.0.0"
+    "hex-to-array-buffer": "2.0.0",
+    "jsonpath": "^1.1.1"
   }
 }

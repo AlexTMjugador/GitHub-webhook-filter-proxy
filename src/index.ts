@@ -1,3 +1,4 @@
+import jp from "jsonpath";
 import {
   getGitHubEventName,
   getRawGitHubEventName,
@@ -14,9 +15,9 @@ enum ResponseCode {
   INTERNAL_SERVER_ERROR = 500,
 }
 
-// A settings key whose value contains the regular expression to
+// A settings key whose value contains the JSONPath expression used
 // for matching the payloads of some event type.
-type EventMatchRegexKey = `${GitHubEventName}_EVENT_MATCH_REGEX`;
+type EventMatchJsonpathKey = `${GitHubEventName}_EVENT_MATCH_JSONPATH`;
 
 // A settings key whose value indicates whether to relay or drop
 // this event to the target (proxied) URL.
@@ -29,7 +30,7 @@ type EventAction = "relay" | "drop";
 // Represents all the possible settings for this proxy. Editing
 // this type usually requires editing user documentation too.
 type Settings = {
-  [key in `${EventMatchRegexKey}`]?: string;
+  [key in `${EventMatchJsonpathKey}`]?: string;
 } & { [key in `${EventMatchActionKey}`]?: EventAction } & {
   SECRET_TOKEN: string;
   TARGET_URL: string;
@@ -96,27 +97,24 @@ export default {
       });
     }
 
-    // Validate the JSON in the request body and minify it to a consistent format,
-    // to reduce the fragility of regular expressions
-    let normalizedWebhookEventBody;
+    // Validate the JSON in the request body and parse it to an object
+    let eventBody;
     try {
-      normalizedWebhookEventBody = JSON.stringify(JSON.parse(requestBody));
+      eventBody = JSON.parse(requestBody);
 
-      console.debug(
-        `Received ${eventName} event: ${normalizedWebhookEventBody}`
-      );
+      console.debug(`Received ${eventName} event`);
     } catch (e) {
       return new Response(`JSON parse error: ${e}`, {
         status: ResponseCode.BAD_REQUEST,
       });
     }
 
-    // Check whether the event body matches some configured regex
+    // Check whether the event body matches some configured JSONPath expression
     let eventBodyMatches;
     let eventMatches;
-    const matchRegex = env[`${eventName}_EVENT_MATCH_REGEX`];
-    if (matchRegex !== undefined) {
-      eventBodyMatches = normalizedWebhookEventBody.match(matchRegex);
+    const matchJsonpath = env[`${eventName}_EVENT_MATCH_JSONPATH`];
+    if (matchJsonpath !== undefined) {
+      eventBodyMatches = jp.query([eventBody], matchJsonpath, 1).length > 0;
       eventMatches = true;
     } else {
       eventBodyMatches = false;
@@ -125,36 +123,36 @@ export default {
 
     let eventAction: EventAction;
     if (eventMatches) {
-      // We have some regex for this event that we checked. It either could match or not
+      // We have some JSONPath expression for this event that we checked. It either could match or not
 
       if (eventBodyMatches) {
-        // The body matched the configured regex. Run the configured action for a match,
+        // The body matched the configured JSONPath. Run the configured action for a match,
         // defaulting to "drop"
 
         eventAction = env[`${eventName}_EVENT_MATCH_ACTION`] ?? "drop";
 
         console.debug(
-          `Event ${eventName} matched the configured regex. Filtering action: ${eventAction}`
+          `Event ${eventName} matched the configured JSONPath expression. Filtering action: ${eventAction}`
         );
       } else {
-        // The body did not match the configured regex. Invert the configured action for
+        // The body did not match the configured JSONPath. Invert the configured action for
         // a match, defaulting to "relay"
 
         const matchAction = env[`${eventName}_EVENT_MATCH_ACTION`];
         eventAction = matchAction === "relay" ? "drop" : "relay";
 
         console.debug(
-          `Event ${eventName} did not match the configured regex. Filtering action: ${eventAction}`
+          `Event ${eventName} did not match the configured JSONPath expression. Filtering action: ${eventAction}`
         );
       }
     } else {
-      // We do not have a regex for this event. Fallback to the default action, or "drop"
+      // We do not have a JSONPath expression for this event. Fallback to the default action, or "drop"
       // if it is not set
 
       eventAction = env.UNMATCHED_EVENT_ACTION ?? "drop";
 
       console.debug(
-        `Event ${eventName} did not match any configured regex. Filtering action: ${eventAction}`
+        `Event ${eventName} did not match any configured JSONPath expression. Filtering action: ${eventAction}`
       );
     }
 

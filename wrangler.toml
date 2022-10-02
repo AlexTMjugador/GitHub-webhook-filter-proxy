@@ -19,6 +19,6 @@ keep_vars = true
 #
 #[vars]
 #TARGET_URL = "https://example.com"
-#PUSH_EVENT_MATCH_REGEX = "..."
+#PUSH_EVENT_MATCH_JSONPATH = "..."
 #PUSH_EVENT_MATCH_ACTION = "drop"
 #UNMATCHED_EVENT_ACTION = "relay"
