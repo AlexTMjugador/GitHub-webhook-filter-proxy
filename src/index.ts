@@ -175,7 +175,9 @@ export default {
       }
     } else {
       // Let GitHub know that the event was delivered, but we've filtered it
-      return new Response("Filtered", { status: ResponseCode.ACCEPTED });
+      return new Response("Dropped by proxy", {
+        status: ResponseCode.ACCEPTED,
+      });
     }
   },
 };
