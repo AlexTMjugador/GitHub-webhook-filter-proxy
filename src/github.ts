@@ -62,7 +62,7 @@ const GITHUB_EVENT_NAMES = [
 ] as const;
 
 // Represents a valid, recognized GitHub webhook event name.
-export type GitHubEventName = typeof GITHUB_EVENT_NAMES[number];
+export type GitHubEventName = (typeof GITHUB_EVENT_NAMES)[number];
 
 // Verifies whether the payload of this webhook request was signed
 // by GitHub, using some shared `secret_token`. If this verification
