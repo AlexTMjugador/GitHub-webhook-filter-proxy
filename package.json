@@ -1,7 +1,7 @@
 {
   "name": "github-webhook-filter-proxy",
   "description": "A serverless, easy-to-setup GitHub webhook filtering proxy that relays or drops events when they match configurable JSONPath expressions, powered by Cloudflare Workers.",
-  "author": "Alejandro González <AlexTMjugador@users.noreply.github.com>",
+  "author": "Alejandro González <me@alegon.dev>",
   "version": "0.0.1",
   "homepage": "https://github.com/AlexTMjugador/GitHub-webhook-filter-proxy",
   "bugs": "https://github.com/AlexTMjugador/GitHub-webhook-filter-proxy/issues",
