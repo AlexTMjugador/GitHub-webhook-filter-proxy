@@ -50,7 +50,7 @@ export default {
     if (!request.headers.get("Content-Type")?.startsWith("application/json")) {
       return new Response(
         "Missing or bad content type header for a JSON payload",
-        { status: ResponseCode.UNSUPPORTED_MEDIA_TYPE }
+        { status: ResponseCode.UNSUPPORTED_MEDIA_TYPE },
       );
     }
 
@@ -58,11 +58,11 @@ export default {
     if (!eventName) {
       return new Response(
         `Missing, invalid or unrecognized event name: ${getRawGitHubEventName(
-          request.headers
+          request.headers,
         )}`,
         {
           status: ResponseCode.BAD_REQUEST,
-        }
+        },
       );
     }
 
@@ -83,7 +83,7 @@ export default {
       const isWebhookSignatureValid = await verifyGitHubWebhookSignature(
         env.SECRET_TOKEN,
         request.headers,
-        requestBody
+        requestBody,
       );
 
       if (!isWebhookSignatureValid) {
@@ -132,7 +132,7 @@ export default {
         eventAction = env[`${eventName}_EVENT_MATCH_ACTION`] ?? "drop";
 
         console.debug(
-          `Event ${eventName} matched the configured JSONPath expression. Filtering action: ${eventAction}`
+          `Event ${eventName} matched the configured JSONPath expression. Filtering action: ${eventAction}`,
         );
       } else {
         // The body did not match the configured JSONPath. Invert the configured action for
@@ -142,7 +142,7 @@ export default {
         eventAction = matchAction === "relay" ? "drop" : "relay";
 
         console.debug(
-          `Event ${eventName} did not match the configured JSONPath expression. Filtering action: ${eventAction}`
+          `Event ${eventName} did not match the configured JSONPath expression. Filtering action: ${eventAction}`,
         );
       }
     } else {
@@ -152,7 +152,7 @@ export default {
       eventAction = env.UNMATCHED_EVENT_ACTION ?? "drop";
 
       console.debug(
-        `Event ${eventName} did not match any configured JSONPath expression. Filtering action: ${eventAction}`
+        `Event ${eventName} did not match any configured JSONPath expression. Filtering action: ${eventAction}`,
       );
     }
 
@@ -164,7 +164,7 @@ export default {
             method: request.method,
             headers: request.headers,
             body: requestBody,
-          })
+          }),
         );
       } catch (e) {
         return new Response(`Could not deliver event to target URL: ${e}`, {

@@ -70,7 +70,7 @@ export type GitHubEventName = (typeof GITHUB_EVENT_NAMES)[number];
 export async function verifyGitHubWebhookSignature(
   secretToken: string,
   requestHeaders: Headers,
-  payload: string
+  payload: string,
 ) {
   // The Cloudflare Workers TextEncoder always uses UTF-8
   const textEncoder = new TextEncoder();
@@ -85,14 +85,14 @@ export async function verifyGitHubWebhookSignature(
         hash: "SHA-256",
       },
       false,
-      ["verify"]
+      ["verify"],
     ),
     // GitHub prefixes the hexadecimal representation of the signature with "sha256=".
     // Remove that and convert the hexadecimal string back to the raw bytes that this function expects
     hexToArrayBuffer(
-      requestHeaders.get("X-Hub-Signature-256")?.replace(/^sha256=/, "") ?? ""
+      requestHeaders.get("X-Hub-Signature-256")?.replace(/^sha256=/, "") ?? "",
     ),
-    textEncoder.encode(payload)
+    textEncoder.encode(payload),
   );
 }
 
@@ -109,6 +109,6 @@ export function getGitHubEventName(requestHeaders: Headers) {
   const eventName = getRawGitHubEventName(requestHeaders)?.toUpperCase();
 
   return GITHUB_EVENT_NAMES.find(
-    (validEventName) => validEventName === eventName
+    (validEventName) => validEventName === eventName,
   );
 }
