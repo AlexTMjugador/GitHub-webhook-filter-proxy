@@ -15,16 +15,15 @@
     "format:fix": "prettier --write ."
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20230518.0",
+    "@cloudflare/workers-types": "4.20230628.0",
     "@types/jsonpath": "0.2.0",
     "@typescript-eslint/eslint-plugin": "5.61.0",
     "@typescript-eslint/parser": "5.61.0",
     "eslint": "8.44.0",
-    "eslint-config-airbnb-typescript-prettier": "5.0.0",
     "eslint-config-prettier": "8.8.0",
     "prettier": "3.0.0",
     "typescript": "5.1.6",
-    "wrangler": "3.1.1"
+    "wrangler": "3.1.2"
   },
   "dependencies": {
     "hex-to-array-buffer": "2.0.0",
