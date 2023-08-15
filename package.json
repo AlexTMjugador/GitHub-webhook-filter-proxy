@@ -23,7 +23,7 @@
     "eslint-config-prettier": "9.0.0",
     "prettier": "3.0.2",
     "typescript": "5.1.6",
-    "wrangler": "3.5.0"
+    "wrangler": "3.5.1"
   },
   "dependencies": {
     "hex-to-array-buffer": "2.0.0",
