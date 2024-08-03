@@ -71,7 +71,7 @@ export default {
     let requestBody;
     try {
       requestBody = await request.text();
-    } catch (e) {
+    } catch {
       return new Response("The request body is not valid text", {
         status: ResponseCode.BAD_REQUEST,
       });
