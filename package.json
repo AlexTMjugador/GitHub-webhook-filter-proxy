@@ -11,7 +11,7 @@
     "start": "wrangler dev",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
-    "format": "prettier --check src",
+    "format": "prettier --check .",
     "format:fix": "prettier --write ."
   },
   "devDependencies": {
