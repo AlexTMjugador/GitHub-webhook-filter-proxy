@@ -25,7 +25,7 @@ jobs:
         run: npm ci
 
       - name: 📤 Deploy to Cloudflare Workers with Wrangler
-        uses: cloudflare/wrangler-action@e998fe3d9a589b7a05d3ca40c0c74cb7435e2ceb # v3.12.0
+        uses: cloudflare/wrangler-action@05f17c4a695b4d94b57b59997562c6a4624c64e4 # v3.12.1
         with:
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           apiToken: ${{ secrets.CF_API_TOKEN }}
