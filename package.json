@@ -15,7 +15,7 @@
     "format:fix": "prettier --write ."
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "4.20250919.0",
+    "@cloudflare/workers-types": "4.20250920.0",
     "@types/jsonpath": "0.2.4",
     "@typescript-eslint/eslint-plugin": "8.44.0",
     "@typescript-eslint/parser": "8.44.0",
