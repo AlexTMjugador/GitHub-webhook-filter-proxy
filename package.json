@@ -27,6 +27,6 @@
   },
   "dependencies": {
     "hex-to-array-buffer": "2.0.0",
-    "jsonpath": "1.2.0"
+    "jsonpath": "1.2.1"
   }
 }
