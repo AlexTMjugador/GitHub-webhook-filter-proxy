@@ -17,8 +17,8 @@
   "devDependencies": {
     "@cloudflare/workers-types": "4.20260702.1",
     "@types/jsonpath": "0.2.4",
-    "@typescript-eslint/eslint-plugin": "8.63.0",
-    "@typescript-eslint/parser": "8.63.0",
+    "@typescript-eslint/eslint-plugin": "8.64.0",
+    "@typescript-eslint/parser": "8.64.0",
     "eslint": "9.39.5",
     "eslint-config-prettier": "10.1.8",
     "prettier": "3.9.5",
